@@ -3,7 +3,7 @@
 set -e
 set -x
 
-IMG=msdk-build
+IMG=msdk-build-centos
 DFILE=Dockerfile
 
 export http_proxy="http://$http_proxy"
