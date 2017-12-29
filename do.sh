@@ -41,6 +41,6 @@ docker exec -it \
 docker exec -it \
     --user test \
     $CNT \
-    /bin/bash
+    /bin/bash || true
 
 docker stop $CNT && docker rm $CNT

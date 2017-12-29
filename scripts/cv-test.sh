@@ -1,12 +1,13 @@
 #!/bin/bash
 
-set -x
 set -e
 
 if [ ! -f /.dockerenv ] ; then
     echo "This script should be run in a Docker container"
     exit 1
 fi
+
+set -x
 
 SRCDIR=/work/opencv
 DATADIR=/work/opencv_extra/testdata
