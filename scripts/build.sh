@@ -21,7 +21,9 @@ mkdir -p $BUILDDIR
 pushd $BUILDDIR && rm -rf *
 cmake \
     -DWITH_MFX=ON \
-    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=install \
     $SRCDIR
+# make -j8 install
 make -j8 opencv_test_videoio
 popd
