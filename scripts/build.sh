@@ -20,12 +20,13 @@ BUILDDIR=/work/build-opencv
 mkdir -p $BUILDDIR
 pushd $BUILDDIR && rm -rf *
 cmake \
+    -GNinja \
     -DWITH_MFX=ON \
-    -DMFX_INCLUDE=/opt/intel/mediasdk/include \
+    -DMFX_INCLUDE=/opt/intel/mediasdk/include/mfx \
     -DMFX_LIBRARY=/opt/intel/mediasdk/lib/libmfx.so \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=install \
     $SRCDIR
 # make -j8 install
-make -j8 opencv_test_videoio
+ninja opencv_test_videoio
 popd

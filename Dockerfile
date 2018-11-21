@@ -20,7 +20,8 @@ RUN apt update && \
         libxext-dev \
         libxfixes-dev \
         libx11-dev \
-        wget
+        wget \
+        ninja-build
 
 RUN mkdir -p /build
 WORKDIR /build
@@ -64,7 +65,7 @@ RUN \
     cmake ../media-driver \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=lib64 \
+        -DCMAKE_INSTALL_LIBDIR=lib \
         -DLIBVA_DRIVERS_PATH=/usr/lib/dri \
         -DMEDIA_VERSION="2.0.0" \
         -DBUILD_ALONG_WITH_CMRTLIB=1 \
