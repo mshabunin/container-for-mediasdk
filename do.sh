@@ -7,13 +7,10 @@ IMG=msdk-build-centos
 CNT=msdk-container
 DFILE=Dockerfile
 
-export http_proxy="http://$http_proxy"
-export https_proxy="https://$https_proxy"
-
 docker build \
     -t $IMG \
-    --build-arg http_proxy="$http_proxy" \
-    --build-arg https_proxy="$https_proxy" \
+    --build-arg HTTP="$http_proxy" \
+    --build-arg HTTPS="$https_proxy" \
     - < $DFILE
 
 docker stop $CNT && docker rm $CNT

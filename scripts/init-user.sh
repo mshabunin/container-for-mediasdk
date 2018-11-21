@@ -24,9 +24,8 @@ groupadd -g $TEST_GID $TEST_UNAME
 useradd -m -u $TEST_UID -g $TEST_GID -s /bin/bash $TEST_UNAME
 
 # Add to video group
-groupadd -g $VIDEO_GID cvideo
-usermod -a -G cvideo $TEST_UNAME
-usermod -a -G cvideo root
+usermod -a -G video $TEST_UNAME
+usermod -a -G video root
 
 # Allow access to MediaSDK
 chown -R $TEST_UNAME $MFX_HOME

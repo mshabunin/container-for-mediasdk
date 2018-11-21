@@ -21,6 +21,8 @@ mkdir -p $BUILDDIR
 pushd $BUILDDIR && rm -rf *
 cmake \
     -DWITH_MFX=ON \
+    -DMFX_INCLUDE=/opt/intel/mediasdk/include \
+    -DMFX_LIBRARY=/opt/intel/mediasdk/lib/libmfx.so \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=install \
     $SRCDIR
