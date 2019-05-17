@@ -1,11 +1,6 @@
 FROM ubuntu:18.04
-ARG HTTP
-ARG HTTPS
-ENV http_proxy=http://${HTTP}
-ENV https_proxy=https://${HTTPS}
 
-RUN apt update && \
-    apt install -y \
+RUN apt-get update && apt-get install -y \
         git \
         autoconf \
         automake \
@@ -15,20 +10,21 @@ RUN apt update && \
         gcc \
         cmake \
         make \
+        ninja-build \
         libpciaccess-dev \
         libdrm-dev \
         libxext-dev \
         libxfixes-dev \
         libx11-dev \
         wget \
-        ninja-build
+    && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /build
-WORKDIR /build
+RUN test -n ${http_proxy} && git config --global http.proxy ${http_proxy}
+RUN test -n ${https_proxy} && git config --global https.proxy ${https_proxy}
 
-# Build libva and other libraries
-ENV http_proxy=${HTTP}
-ENV https_proxy=${HTTPS}
+RUN mkdir -p /components
+WORKDIR /components
 
 RUN \
     git clone https://github.com/01org/libva && \
@@ -81,13 +77,8 @@ ENV LIBVA_DRIVERS_PATH /usr/lib/dri
 
 RUN \
     git clone https://github.com/Intel-Media-SDK/MediaSDK && \
-    cd MediaSDK && \
-    export MFX_HOME=`pwd` && \
-    perl tools/builder/build_mfx.pl --cmake=intel64.make.release --no-warn-as-error && \
-    make -j8 -C __cmake/intel64.make.release install
+    mkdir build-msdk && \
+    cd build-msdk && \
+    cmake -GNinja ../MediaSDK && \
+    ninja install
 ENV MFX_HOME /opt/intel/mediasdk
-
-VOLUME /work
-VOLUME /scripts
-
-CMD /bin/bash

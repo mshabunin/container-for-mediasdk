@@ -3,41 +3,28 @@
 set -e
 set -x
 
-IMG=msdk-build-centos
+IMG=msdk-build
 CNT=msdk-container
 DFILE=Dockerfile
 
 docker build \
     -t $IMG \
-    --build-arg HTTP="$http_proxy" \
-    --build-arg HTTPS="$https_proxy" \
+    --build-arg http_proxy=${http_proxy} \
+    --build-arg https_proxy=${https_proxy} \
     - < $DFILE
 
-docker stop $CNT && docker rm $CNT
-
 docker run  \
-    -it -d \
+    -it \
     --name $CNT \
-    --volume $(readlink -f volume):/work \
     --volume $(readlink -f scripts):/scripts:ro \
-    --workdir /work \
+    --volume $(readlink -f ../opencv):/opencv:ro \
+    --volume $(readlink -f ../opencv_extra):/opencv_extra:ro \
+    --volume $(readlink -f ../build):/build \
+    --workdir /build \
     --device /dev/dri:/dev/dri \
     --cap-add sys_ptrace \
+    --user $(id -u):$(id -g) \
+    --group-add 44 \
+    --rm \
     $IMG \
     /bin/bash
-
-docker exec -it \
-    --env TEST_UNAME=test \
-    --env TEST_UID=$(id -u) \
-    --env TEST_GID=$(id -g) \
-    --env VIDEO_GID=$(stat -c %g /dev/dri/renderD128) \
-    --user root \
-    $CNT \
-    /scripts/init-user.sh
-
-docker exec -it \
-    --user test \
-    $CNT \
-    /bin/bash || true
-
-docker stop $CNT && docker rm $CNT

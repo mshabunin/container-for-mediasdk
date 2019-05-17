@@ -9,24 +9,27 @@ fi
 
 set -x
 
-SRCDIR=/work/opencv
-DATADIR=/work/opencv_extra/testdata
-BUILDDIR=/work/build-opencv
-
-# export MFX_HOME=/opt/intel/mediasdk
-# -DCMAKE_CXX_FLAGS="-fsanitize=address" \
-# -DCMAKE_C_FLAGS="-fsanitize=address" \
+SRCDIR=/opencv
+DATADIR=/opencv_extra/testdata
+BUILDDIR=/build
 
 mkdir -p $BUILDDIR
 pushd $BUILDDIR && rm -rf *
 cmake \
     -GNinja \
     -DWITH_MFX=ON \
+    -DBUILD_LIST=videoio,ts \
+    -DWITH_WEBP=OFF \
+    -DWITH_PNG=OFF \
+    -DWITH_TIFF=OFF \
+    -DWITH_JASPER=OFF \
+    -DWITH_OPENEXR=OFF \
+    -DVIDEOIO_PLUGIN_LIST=mfx \
+    -DMFX_HOME=/opt/intel/mediasdk \
     -DMFX_INCLUDE=/opt/intel/mediasdk/include/mfx \
     -DMFX_LIBRARY=/opt/intel/mediasdk/lib/libmfx.so \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=install \
     $SRCDIR
-# make -j8 install
-ninja opencv_test_videoio
+ninja install
 popd
